@@ -96,7 +96,7 @@ const updateTotalPrice = () => {
         total += price * quantity;
     });
     totalPriceElement.textContent = `$${total.toFixed(2)}`;
-    cashInputElement.value = "0";
+    cashInputElement.value = "";
     changeGivenElement.textContent = `$0.00`;
 
     cashInputElement.addEventListener("input", () => {
@@ -141,11 +141,11 @@ buyNowButton.addEventListener("click", () => {
     cartItemCount = 0;
     updateCartCount(0);
     updateTotalPrice();
-    cashInputElement.value = "0";
+    cashInputElement.value = "";
     changeGivenElement.textContent = `$0.00`;
 });
 
 // Set amount-price to 0 on page load
 window.onload = () => {
-    cashInputElement.value = "0";
+    cashInputElement.value = "";
 };
