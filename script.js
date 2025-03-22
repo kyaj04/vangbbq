@@ -1,8 +1,14 @@
-const cartIcon = document.querySelector("#cart-icon");
-const cart = document.querySelector(".cart");
-const cartClose = document.querySelector("#cart-close");
-cartIcon.addEventListener("click", () => cart.classList.add("active"));
-cartClose.addEventListener("click", () => cart.classList.remove("active"));
+const viewOrderButton = document.querySelector("#btn-view");
+const addOrderButton = document.querySelector("#btn-add");
+const orders = document.querySelector(".orders");
+const viewOrderClose = document.querySelector("#order-close");
+
+// Show orders on "View Orders" click
+viewOrderButton.addEventListener("click", () => orders.classList.add("active"));
+
+// Hide orders on "X" close click
+viewOrderClose.addEventListener("click", () => orders.classList.remove("active"));
+
 
 const cashInputElement = document.querySelector(".amount-price");
 const changeGivenElement = document.querySelector(".change-price");
@@ -149,3 +155,155 @@ buyNowButton.addEventListener("click", () => {
 window.onload = () => {
     cashInputElement.value = "";
 };
+
+const btnAdd = document.getElementById("btn-add");
+    const orderTableBody = document.getElementById("order-table-body");
+    const ordersDiv = document.querySelector(".orders");
+
+    let orderCounter = 1;
+    let ordersData = JSON.parse(localStorage.getItem("orders")) || [];
+
+    function generateOrderNumber() {
+      return `ORD-${orderCounter.toString().padStart(3, "0")}`;
+    }
+
+    function saveOrdersToLocalStorage() {
+      localStorage.setItem("orders", JSON.stringify(ordersData));
+    }
+
+    function loadOrdersFromLocalStorage() {
+      ordersData.forEach(order => {
+        addOrderToTable(order.orderNumber, order.dishes, order.completed);
+        if(order.orderNumber.slice(4)*1 >= orderCounter){
+          orderCounter = order.orderNumber.slice(4)*1 +1;
+        }
+      });
+    }
+
+    function addOrderToTable(orderNumber, dishes, completed = false) {
+  const row = document.createElement("tr");
+  if (completed) {
+    row.classList.add("completed-order");
+  }
+  row.innerHTML = `
+    <td>
+      ${orderNumber}
+      <i class="fa-solid fa-trash-can icon-button delete-button"></i>
+      <i class="fa-solid fa-check icon-button complete-button"></i>
+      ${completed ? '<i class="fa-solid fa-undo icon-button undo-button"></i>' : ''}
+    </td>
+    <td>${dishes.join(", ")}</td>
+  `;
+  orderTableBody.appendChild(row);
+
+  row.querySelector(".delete-button").addEventListener("click", () => {
+    const index = ordersData.findIndex(o => o.orderNumber === orderNumber);
+    if (index !== -1) {
+      ordersData.splice(index, 1);
+      saveOrdersToLocalStorage();
+      row.remove();
+    }
+  });
+
+  row.querySelector(".complete-button").addEventListener("click", () => {
+    row.classList.add("completed-order");
+    const order = ordersData.find(o => o.orderNumber === orderNumber);
+    if (order) {
+      order.completed = true;
+      saveOrdersToLocalStorage();
+      row.innerHTML = `
+        <td>
+          ${orderNumber}
+          <i class="fa-solid fa-trash-can icon-button delete-button"></i>
+          <i class="fa-solid fa-check icon-button complete-button"></i>
+          <i class="fa-solid fa-undo icon-button undo-button"></i>
+        </td>
+        <td>${dishes.join(", ")}</td>
+      `;
+      row.querySelector(".undo-button").addEventListener("click", undoRow);
+      row.querySelector(".delete-button").addEventListener("click", deleteRow);
+      row.querySelector(".complete-button").addEventListener("click", completeRow);
+    }
+  });
+
+  function undoRow(){
+    row.classList.remove("completed-order");
+    const order = ordersData.find(o => o.orderNumber === orderNumber);
+    if (order) {
+      order.completed = false;
+      saveOrdersToLocalStorage();
+      row.innerHTML = `
+        <td>
+          ${orderNumber}
+          <i class="fa-solid fa-trash-can icon-button delete-button"></i>
+          <i class="fa-solid fa-check icon-button complete-button"></i>
+        </td>
+        <td>${dishes.join(", ")}</td>
+      `;
+      row.querySelector(".delete-button").addEventListener("click", deleteRow);
+      row.querySelector(".complete-button").addEventListener("click", completeRow);
+    }
+  }
+
+  function deleteRow(){
+    const index = ordersData.findIndex(o => o.orderNumber === orderNumber);
+    if (index !== -1) {
+      ordersData.splice(index, 1);
+      saveOrdersToLocalStorage();
+      row.remove();
+    }
+  }
+
+  function completeRow(){
+    row.classList.add("completed-order");
+    const order = ordersData.find(o => o.orderNumber === orderNumber);
+    if (order) {
+      order.completed = true;
+      saveOrdersToLocalStorage();
+      row.innerHTML = `
+        <td>
+          ${orderNumber}
+          <i class="fa-solid fa-trash-can icon-button delete-button"></i>
+          <i class="fa-solid fa-check icon-button complete-button"></i>
+          <i class="fa-solid fa-undo icon-button undo-button"></i>
+        </td>
+        <td>${dishes.join(", ")}</td>
+      `;
+      row.querySelector(".undo-button").addEventListener("click", undoRow);
+      row.querySelector(".delete-button").addEventListener("click", deleteRow);
+      row.querySelector(".complete-button").addEventListener("click", completeRow);
+    }
+  }
+
+  if(completed){
+    row.querySelector(".undo-button").addEventListener("click", undoRow);
+  }
+  row.querySelector(".delete-button").addEventListener("click", deleteRow);
+  row.querySelector(".complete-button").addEventListener("click", completeRow);
+}
+
+btnAdd.addEventListener("click", () => {
+    const orderNumber = generateOrderNumber();
+    const cartBoxes = cartContent.querySelectorAll(".cart-box");
+    const dishes = Array.from(cartBoxes).map(cartBox => {
+      const title = cartBox.querySelector(".cart-product-title").textContent;
+      const quantity = cartBox.querySelector(".number").textContent;
+      return `${quantity} ${title}`;
+    });
+
+    if (dishes.length === 0) {
+      alert("Cart is empty!");
+      return;
+    }
+
+    ordersData.push({ orderNumber, dishes, completed: false });
+    saveOrdersToLocalStorage();
+    addOrderToTable(orderNumber, dishes);
+    orderCounter++;
+
+    //clear cart
+    buyNowButton.click();
+    ordersDiv.classList.add("active");
+  });
+
+  loadOrdersFromLocalStorage();
