@@ -33,7 +33,52 @@ header {
     font-weight: 600;
 }
 
+/* Flex container for title and icon */
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .order-title {
+    margin: 0;
+    font-size: 24px;
+  }
+  
+  /* Adjusting icon size and cursor */
+  #order-icon i {
+    font-size: 24px;
+    cursor: pointer;
+  }
+  
+  /* Table styles */
+  .order-table {
+    width: fit-content;
+    border-collapse: collapse;
+  }
+  
+  .order-table th,
+  .order-table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .cart-remove {
+    color: red;
+    cursor: pointer;
+  }
+
 #cart-icon {
+    position: relative;
+    display: flex;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+
+#order-icon {
     position: relative;
     display: flex;
     font-size: 30px;
@@ -69,7 +114,7 @@ header {
 
 .product-content{
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 30px;
     padding-right: 360px;
 
@@ -82,7 +127,7 @@ header {
 }
 
 .img-box img {
-    width: 100%;
+    width: 70%;
     transition: 0.5s;
 }
 
@@ -91,12 +136,13 @@ header {
 }
 
 .product-box .product-title {
-    font-size: 20px;
+    font-size: 18px;
     margin-top: 10px;
 }
 
 .product-box .price-and-cart{
     display: flex;
+    width: 70%;
     justify-content: space-between;
     align-items: center;
 }
@@ -128,6 +174,38 @@ header {
     overflow: auto;
     transition: 0.5s;
 }
+
+.orders { /* Corrected selector: .orders */
+    position: fixed;
+    top: 0;
+    left: -100%; /*Start hidden off screen*/
+    width: 65%;
+    height: 100%;
+    background: #fff;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+    padding: 25px 20px 40px;
+    z-index: 100;
+    overflow: auto;
+    transition: 0.5s;
+  }
+  
+  .orders.active {
+    left: 0;
+  }
+
+  .completed-order {
+    background-color: #f0f0f0; /* Light gray background */
+    color: #999; /* Light gray text */
+  }
+
+  .completed-order td {
+    text-decoration: line-through; /* Add line-through */
+  }
+
+  .icon-button {
+    cursor: pointer;
+    margin-left: 5px;
+  }
 
 .cart.active {
     right: 0;
@@ -258,8 +336,20 @@ header {
 
 .btn-buy{
     display: block;
-    padding: 10px 30px;
+    padding: 10px 20px;
     background: #e35f26;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    color: #fff;
+    margin: 50px auto 0;
+    cursor: pointer;
+}
+
+.checkout-container #btn-add{
+    display: block;
+    padding: 10px 20px;
+    background: #002fff;
     border: none;
     border-radius: 6px;
     font-size: 16px;
@@ -268,14 +358,37 @@ header {
     cursor: pointer;
 }
 
-#cart-close{
+.checkout-container #btn-view{
+    display: block;
+    padding: 10px 20px;
+    background: #00a6ff;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    color: #fff;
+    margin: 20px auto 0;
+    cursor: pointer;
+}
+
+.checkout-container {
+    display: flex; /* Enable flexbox */
+    justify-content: flex-start; /* Align items to the start of the container */
+    align-items: center; /* Align items vertically in the center */
+    gap: 20px; /* Optional: Add some space between the buttons */
+    position: relative; /*Needed for the relative positioning of the buttons*/
+    top: 20px;
+    right: 1px;
+  }
+
+#cart-close, #add-order,#view-order{
     position: absolute;
     top: 20px;
-    right: 15px;
+    right: 10px;
     font-size: 35px;
     cursor: pointer;
     visibility: hidden;
 }
+
 
 @media  screen and (max-width: 360px) {
     .product-content {
