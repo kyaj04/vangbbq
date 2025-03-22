@@ -120,9 +120,9 @@ header {
 .product-content, .meats, .meats-rice, .appetizer, .drinks{
     display: grid;
     /*grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));*/
-    grid-template-columns: repeat(3, 200px);
+    grid-template-columns: repeat(auto-fit, 365px);
     gap: 30px;
-    padding-right: 750px;
+    padding-right: 30px;
 
 }
 
