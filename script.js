@@ -188,8 +188,8 @@ const btnAdd = document.getElementById("btn-add");
   row.innerHTML = `
     <td>
       ${orderNumber}
-      <i class="fa-solid fa-trash-can icon-button delete-button"></i>
       <i class="fa-solid fa-check icon-button complete-button"></i>
+      <i class="fa-solid fa-trash-can icon-button delete-button"></i>
       ${completed ? '<i class="fa-solid fa-undo icon-button undo-button"></i>' : ''}
     </td>
     <td>${dishes.join(", ")}</td>
@@ -214,9 +214,10 @@ const btnAdd = document.getElementById("btn-add");
       row.innerHTML = `
         <td>
           ${orderNumber}
-          <i class="fa-solid fa-trash-can icon-button delete-button"></i>
+          
           <i class="fa-solid fa-check icon-button complete-button"></i>
           <i class="fa-solid fa-undo icon-button undo-button"></i>
+          <i class="fa-solid fa-trash-can icon-button delete-button"></i>
         </td>
         <td>${dishes.join(", ")}</td>
       `;
@@ -235,8 +236,9 @@ const btnAdd = document.getElementById("btn-add");
       row.innerHTML = `
         <td>
           ${orderNumber}
-          <i class="fa-solid fa-trash-can icon-button delete-button"></i>
           <i class="fa-solid fa-check icon-button complete-button"></i>
+          <i class="fa-solid fa-trash-can icon-button delete-button"></i>
+          
         </td>
         <td>${dishes.join(", ")}</td>
       `;
@@ -263,9 +265,10 @@ const btnAdd = document.getElementById("btn-add");
       row.innerHTML = `
         <td>
           ${orderNumber}
-          <i class="fa-solid fa-trash-can icon-button delete-button"></i>
+          
           <i class="fa-solid fa-check icon-button complete-button"></i>
           <i class="fa-solid fa-undo icon-button undo-button"></i>
+          <i class="fa-solid fa-trash-can icon-button delete-button"></i>
         </td>
         <td>${dishes.join(", ")}</td>
       `;
