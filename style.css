@@ -48,7 +48,7 @@ header {
   
   /* Adjusting icon size and cursor */
   #order-icon i {
-    font-size: 24px;
+    font-size: 50px;
     cursor: pointer;
   }
   
@@ -63,13 +63,18 @@ header {
     border: 1px solid #ccc;
     padding: 10px;
     text-align: left;
+    font-size: 25px;
+    word-spacing: 4px;
   }
   
-  .cart-remove {
+  .cart-remove, .delete-button {
     color: red;
     cursor: pointer;
   }
-
+  .complete-button {
+    color: darkgreen;
+    cursor: pointer;
+  }
 #cart-icon {
     position: relative;
     display: flex;
@@ -112,13 +117,15 @@ header {
     padding-right: 360px;
 }
 
-.product-content{
+.product-content, .meats, .meats-rice, .appetizer, .drinks{
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    /*grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));*/
+    grid-template-columns: repeat(3, 450px);
     gap: 30px;
-    padding-right: 360px;
+    padding-right: 250px;
 
 }
+
 
 .product-box .img-box {
     display: flex;
