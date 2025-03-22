@@ -7,6 +7,7 @@
     <title> Vang BBQ POS</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body>
@@ -54,10 +55,40 @@
             <div class="change-price">$0</div>
         </div>
 
+        <div class="checkout-container">
+            
+    
+            <button id="btn-view">View Orders</button>
+            <i class="ri-close-line" id="view-order"></i>
+
+            <button id="btn-add">Add Order</button>
+            <i class="ri-close-line" id="add-order"></i>
+        </div>
         <button class="btn-buy">Clear</button>
         <i class="ri-close-line" id="cart-close"></i>
-    </div>
 
+    </div>
+    <div class="orders">
+        <div class="order-header">
+          <h1 class="order-title">Customer Orders</h1>
+          <div id="order-icon">
+            <i class="ri-close-line" id="order-close"></i>
+          </div>
+        </div>
+        <table class="order-table">
+            <thead>
+              <tr>
+                <th>Order #</th>
+                <th>Dish Orders</th>
+              </tr>
+            </thead>
+            <tbody id="order-table-body">
+              </tbody>
+          </table>
+      </div>
+      
+
+    </section>
     <section class="shop">
         <h1 class="section-title">Dishes</h1>
         <div class="product-content">
@@ -135,6 +166,17 @@
                 <h2 class="product-title">Pepper Mix</h2>
                 <div class="price-and-cart">
                     <span class="price">$8</span>
+                    <i class="ri-shopping-bag-line add-cart"></i>
+                </div>
+            </div>
+
+            <div class="product-box">
+                <div class="img-box">
+                    <img src="img/drinks.jpg">
+                </div>
+                <h2 class="product-title">Beverages</h2>
+                <div class="price-and-cart">
+                    <span class="price">$2</span>
                     <i class="ri-shopping-bag-line add-cart"></i>
                 </div>
             </div>
