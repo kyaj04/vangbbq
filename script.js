@@ -158,74 +158,57 @@ window.onload = () => {
 
 // order code
 const btnAdd = document.getElementById("btn-add");
-const orderTableBody = document.getElementById("order-table-body");
-const ordersDiv = document.querySelector(".orders");
+    const orderTableBody = document.getElementById("order-table-body");
+    const ordersDiv = document.querySelector(".orders");
 
-let orderCounter = 1;
-let ordersData = JSON.parse(localStorage.getItem("orders")) ||;
+    let orderCounter = 1;
+    let ordersData = JSON.parse(localStorage.getItem("orders")) || [];
 
-function generateOrderNumber() {
-  return `ORD-${orderCounter.toString().padStart(3, "0")}`;
-}
-
-function saveOrdersToLocalStorage() {
-  try {
-    console.log("Saving to local storage:", JSON.stringify(ordersData));
-    localStorage.setItem("orders", JSON.stringify(ordersData));
-    sendOrdersToLaptop();
-  } catch (error) {
-    console.error("Error saving to local storage:", error);
-  }
-}
-
-function sendOrdersToLaptop() {
-  const ipInput = document.getElementById("ipinput").value.trim();
-  const feedbackDiv = document.getElementById("ip-feedback");
-
-  if (ipInput === "" || ipInput === "192.168.x.x" || !isValidIP(ipInput)) {
-    feedbackDiv.textContent = "Invalid IP address. Please enter a valid one.";
-    feedbackDiv.style.display = "block";
-    return;
-  } else {
-    feedbackDiv.style.display = "none";
-  }
-
-  fetch(`http://${ipInput}:3000/receive`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(ordersData),
-  })
-    .then((response) => response.text())
-    .then((data) => console.log("Response from server:", data))
-    .catch((error) => console.error("Error:", error));
-
-
-}
-
-// Function to check if the IP address format is valid
-function isValidIP(ip) {
-  const regex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-  return regex.test(ip);
-}
-
-function loadOrdersFromLocalStorage() {
-  const storedOrders = localStorage.getItem("orders");
-  console.log("Loaded from local storage:", storedOrders);
-  if (storedOrders) {
-    ordersData = JSON.parse(storedOrders);
-    console.log("Parsed ordersData:", ordersData);
-  } else {
-    ordersData =;
-  }
-  ordersData.forEach((order) => {
-    addOrderToTable(order.orderNumber, order.dishes, order.completed);
-    if (order.orderNumber.slice(4) * 1 >= orderCounter) {
-      orderCounter = order.orderNumber.slice(4) * 1 + 1;
+    function generateOrderNumber() {
+      return `ORD-${orderCounter.toString().padStart(3, "0")}`;
     }
-  });
-}
 
-function addOrderToTable(orderNumber, dishes, completed = false) {
+    function saveOrdersToLocalStorage() {
+      localStorage.setItem("orders", JSON.stringify(ordersData));
+      sendOrdersToLaptop();
+    }
+
+    function sendOrdersToLaptop() {
+      const ipInput = document.getElementById("ipinput").value.trim();
+      const feedbackDiv = document.getElementById("ip-feedback");
+    
+      // Check if the input is empty or the default value
+      if (ipInput === "" || ipInput === "192.168.x.x" || !isValidIP(ipInput)) {
+        feedbackDiv.textContent = "Invalid IP address. Please enter a valid one.";
+        feedbackDiv.style.display = "block"; // Show the feedback message
+        return; // Don't run the function if the IP is invalid or empty
+      } else {
+        feedbackDiv.style.display = "none"; // Hide feedback if the IP is valid
+      }
+    
+      // Proceed with sending the orders if the IP is valid
+      fetch(`http://${ipInput}:3000/receive`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(ordersData)
+      })
+      .then(response => response.text())
+      .then(data => console.log("Response from server:", data))
+      .catch(error => console.error("Error:", error));
+    }
+    
+    
+
+    function loadOrdersFromLocalStorage() {
+      ordersData.forEach(order => {
+        addOrderToTable(order.orderNumber, order.dishes, order.completed);
+        if(order.orderNumber.slice(4)*1 >= orderCounter){
+          orderCounter = order.orderNumber.slice(4)*1 +1;
+        }
+      });
+    }
+
+    function addOrderToTable(orderNumber, dishes, completed = false) {
   const row = document.createElement("tr");
   if (completed) {
     row.classList.add("completed-order");
@@ -235,96 +218,123 @@ function addOrderToTable(orderNumber, dishes, completed = false) {
       ${orderNumber}
       <i class="fa-solid fa-check icon-button complete-button"></i>
       <i class="fa-solid fa-trash-can icon-button delete-button"></i>
-      ${completed ? '<i class="fa-solid fa-undo icon-button undo-button"></i>' : ""}
+      ${completed ? '<i class="fa-solid fa-undo icon-button undo-button"></i>' : ''}
     </td>
     <td>${dishes.join(", ")}</td>
   `;
   orderTableBody.appendChild(row);
-}
 
-// Event delegation
-orderTableBody.addEventListener("click", (event) => {
-  const target = event.target;
-  let row = target.closest("tr"); // Moved row declaration here.
-  if (!row) return;
-
-  const orderNumberElement = row.querySelector("td");
-  let orderNumber = "";
-  if (orderNumberElement) {
-    orderNumber = orderNumberElement.textContent.split("\n")[0].trim();
-  }
-  console.log("Extracted orderNumber:", orderNumber);
-  ordersData.forEach(o => console.log("Order in ordersData:", o.orderNumber, o));
-  const order = ordersData.find((o) => o.orderNumber === orderNumber);
-
-  if (target.classList.contains("delete-button")) {
-    const index = ordersData.findIndex((o) => o.orderNumber === orderNumber);
+  row.querySelector(".delete-button").addEventListener("click", () => {
+    const index = ordersData.findIndex(o => o.orderNumber === orderNumber);
     if (index !== -1) {
       ordersData.splice(index, 1);
       saveOrdersToLocalStorage();
       row.remove();
     }
-  } else if (target.classList.contains("complete-button")) {
+  });
+
+  row.querySelector(".complete-button").addEventListener("click", () => {
     row.classList.add("completed-order");
+    const order = ordersData.find(o => o.orderNumber === orderNumber);
     if (order) {
       order.completed = true;
-      console.log("Order found and marked as complete:", order);
-      console.log("ordersData after marking as complete:", ordersData);
       saveOrdersToLocalStorage();
-      // Re-render the row with the undo button
       row.innerHTML = `
         <td>
           ${orderNumber}
+          
           <i class="fa-solid fa-check icon-button complete-button"></i>
           <i class="fa-solid fa-undo icon-button undo-button"></i>
           <i class="fa-solid fa-trash-can icon-button delete-button"></i>
         </td>
-        <td>${order.dishes.join(", ")}</td>
+        <td>${dishes.join(", ")}</td>
       `;
-      row = target.closest("tr"); // Re-fetch the row.
-    } else {
-      console.log("Order not found in ordersData:", orderNumber);
+      row.querySelector(".undo-button").addEventListener("click", undoRow);
+      row.querySelector(".delete-button").addEventListener("click", deleteRow);
+      row.querySelector(".complete-button").addEventListener("click", completeRow);
     }
-  } else if (target.classList.contains("undo-button")) {
+  });
+
+  function undoRow(){
     row.classList.remove("completed-order");
+    const order = ordersData.find(o => o.orderNumber === orderNumber);
     if (order) {
       order.completed = false;
       saveOrdersToLocalStorage();
-      // Re-render the row without the undo button
       row.innerHTML = `
         <td>
           ${orderNumber}
           <i class="fa-solid fa-check icon-button complete-button"></i>
           <i class="fa-solid fa-trash-can icon-button delete-button"></i>
+          
         </td>
-        <td>${order.dishes.join(", ")}</td>
+        <td>${dishes.join(", ")}</td>
       `;
-      row = target.closest("tr"); // Re-fetch the row.
+      row.querySelector(".delete-button").addEventListener("click", deleteRow);
+      row.querySelector(".complete-button").addEventListener("click", completeRow);
     }
   }
-});
 
-btnAdd.addEventListener("click", () => {
-  const orderNumber = generateOrderNumber();
-  const cartBoxes = cartContent.querySelectorAll(".cart-box");
-  const dishes = Array.from(cartBoxes).map((cartBox) => {
-    const title = cartBox.querySelector(".cart-product-title").textContent;
-    const quantity = cartBox.querySelector(".number").textContent;
-    return `${quantity} ${title}`;
-  });
-
-  if (dishes.length === 0) {
-    alert("Cart is empty!");
-    return;
+  function deleteRow(){
+    const index = ordersData.findIndex(o => o.orderNumber === orderNumber);
+    if (index !== -1) {
+      ordersData.splice(index, 1);
+      saveOrdersToLocalStorage();
+      row.remove();
+    }
   }
 
-  ordersData.push({ orderNumber, dishes, completed: false });
-  saveOrdersToLocalStorage();
-  addOrderToTable(orderNumber, dishes);
-  orderCounter++;
+  function completeRow(){
+    row.classList.add("completed-order");
+    const order = ordersData.find(o => o.orderNumber === orderNumber);
+    if (order) {
+      order.completed = true;
+      saveOrdersToLocalStorage();
+      row.innerHTML = `
+        <td>
+          ${orderNumber}
+          
+          <i class="fa-solid fa-check icon-button complete-button"></i>
+          <i class="fa-solid fa-undo icon-button undo-button"></i>
+          <i class="fa-solid fa-trash-can icon-button delete-button"></i>
+        </td>
+        <td>${dishes.join(", ")}</td>
+      `;
+      row.querySelector(".undo-button").addEventListener("click", undoRow);
+      row.querySelector(".delete-button").addEventListener("click", deleteRow);
+      row.querySelector(".complete-button").addEventListener("click", completeRow);
+    }
+  }
 
-  buyNowButton.click();
-  ordersDiv.classList.add("active");
-});
+  if(completed){
+    row.querySelector(".undo-button").addEventListener("click", undoRow);
+  }
+  row.querySelector(".delete-button").addEventListener("click", deleteRow);
+  row.querySelector(".complete-button").addEventListener("click", completeRow);
+}
 
-loadOrdersFromLocalStorage();
+btnAdd.addEventListener("click", () => {
+    const orderNumber = generateOrderNumber();
+    const cartBoxes = cartContent.querySelectorAll(".cart-box");
+    const dishes = Array.from(cartBoxes).map(cartBox => {
+      const title = cartBox.querySelector(".cart-product-title").textContent;
+      const quantity = cartBox.querySelector(".number").textContent;
+      return `${quantity} ${title}`;
+    });
+
+    if (dishes.length === 0) {
+      alert("Cart is empty!");
+      return;
+    }
+
+    ordersData.push({ orderNumber, dishes, completed: false });
+    saveOrdersToLocalStorage();
+    addOrderToTable(orderNumber, dishes);
+    orderCounter++;
+
+    //clear cart
+    buyNowButton.click();
+    ordersDiv.classList.add("active");
+  });
+
+  loadOrdersFromLocalStorage();
