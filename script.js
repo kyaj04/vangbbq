@@ -155,7 +155,6 @@ buyNowButton.addEventListener("click", () => {
 window.onload = () => {
     cashInputElement.value = "";
 };
-
 const btnAdd = document.getElementById("btn-add");
 const orderTableBody = document.getElementById("order-table-body");
 const ordersDiv = document.querySelector(".orders");
@@ -223,7 +222,7 @@ function addOrderToTable(orderNumber, dishes, completed = false) {
 // Event delegation
 orderTableBody.addEventListener("click", (event) => {
   const target = event.target;
-  const row = target.closest("tr");
+  let row = target.closest("tr"); // Moved row declaration here.
   if (!row) return;
 
   const orderNumber = row.querySelector("td").textContent.trim().split("\n")[0].trim();
@@ -251,6 +250,7 @@ orderTableBody.addEventListener("click", (event) => {
         </td>
         <td>${order.dishes.join(", ")}</td>
       `;
+      row = target.closest("tr"); // Re-fetch the row.
     }
   } else if (target.classList.contains("undo-button")) {
     row.classList.remove("completed-order");
@@ -266,6 +266,7 @@ orderTableBody.addEventListener("click", (event) => {
         </td>
         <td>${order.dishes.join(", ")}</td>
       `;
+      row = target.closest("tr"); // Re-fetch the row.
     }
   }
 });
