@@ -187,7 +187,7 @@ const btnAdd = document.getElementById("btn-add");
       }
     
       // Proceed with sending the orders if the IP is valid
-      fetch(`http://${ipInput}:3000/receive`, {
+      fetch(`https://${ipInput}:3000/receive`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(ordersData)
