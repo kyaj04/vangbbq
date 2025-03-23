@@ -174,13 +174,18 @@ const btnAdd = document.getElementById("btn-add");
 
     function sendOrdersToLaptop() {
       const ipInput = document.getElementById("ipinput").value.trim();
+      const feedbackDiv = document.getElementById("ip-feedback");
     
       // Check if the input is empty or the default value
       if (ipInput === "" || ipInput === "192.168.x.x" || !isValidIP(ipInput)) {
-        console.warn("Invalid or missing IP address. Function will not run.");
+        feedbackDiv.textContent = "Invalid IP address. Please enter a valid one.";
+        feedbackDiv.style.display = "block"; // Show the feedback message
         return; // Don't run the function if the IP is invalid or empty
+      } else {
+        feedbackDiv.style.display = "none"; // Hide feedback if the IP is valid
       }
     
+      // Proceed with sending the orders if the IP is valid
       fetch(`http://${ipInput}:3000/receive`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -191,11 +196,6 @@ const btnAdd = document.getElementById("btn-add");
       .catch(error => console.error("Error:", error));
     }
     
-    // Function to check if the IP address format is valid
-    function isValidIP(ip) {
-      const regex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-      return regex.test(ip);
-    }
     
 
     function loadOrdersFromLocalStorage() {
