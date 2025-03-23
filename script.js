@@ -155,20 +155,27 @@ buyNowButton.addEventListener("click", () => {
 window.onload = () => {
     cashInputElement.value = "";
 };
+
+// order code
 const btnAdd = document.getElementById("btn-add");
 const orderTableBody = document.getElementById("order-table-body");
 const ordersDiv = document.querySelector(".orders");
 
 let orderCounter = 1;
-let ordersData = JSON.parse(localStorage.getItem("orders")) || [];
+let ordersData = JSON.parse(localStorage.getItem("orders")) ||;
 
 function generateOrderNumber() {
   return `ORD-${orderCounter.toString().padStart(3, "0")}`;
 }
 
 function saveOrdersToLocalStorage() {
-  localStorage.setItem("orders", JSON.stringify(ordersData));
-  sendOrdersToLaptop();
+  try {
+    console.log("Saving to local storage:", JSON.stringify(ordersData));
+    localStorage.setItem("orders", JSON.stringify(ordersData));
+    sendOrdersToLaptop();
+  } catch (error) {
+    console.error("Error saving to local storage:", error);
+  }
 }
 
 function sendOrdersToLaptop() {
@@ -194,6 +201,14 @@ function sendOrdersToLaptop() {
 }
 
 function loadOrdersFromLocalStorage() {
+  const storedOrders = localStorage.getItem("orders");
+  console.log("Loaded from local storage:", storedOrders);
+  if (storedOrders) {
+    ordersData = JSON.parse(storedOrders);
+    console.log("Parsed ordersData:", ordersData);
+  } else {
+    ordersData =;
+  }
   ordersData.forEach((order) => {
     addOrderToTable(order.orderNumber, order.dishes, order.completed);
     if (order.orderNumber.slice(4) * 1 >= orderCounter) {
@@ -225,7 +240,13 @@ orderTableBody.addEventListener("click", (event) => {
   let row = target.closest("tr"); // Moved row declaration here.
   if (!row) return;
 
-  const orderNumber = row.querySelector("td").textContent.trim().split("\n")[0].trim();
+  const orderNumberElement = row.querySelector("td");
+  let orderNumber = "";
+  if (orderNumberElement) {
+    orderNumber = orderNumberElement.textContent.split("\n")[0].trim();
+  }
+  console.log("Extracted orderNumber:", orderNumber);
+  ordersData.forEach(o => console.log("Order in ordersData:", o.orderNumber, o));
   const order = ordersData.find((o) => o.orderNumber === orderNumber);
 
   if (target.classList.contains("delete-button")) {
@@ -239,6 +260,8 @@ orderTableBody.addEventListener("click", (event) => {
     row.classList.add("completed-order");
     if (order) {
       order.completed = true;
+      console.log("Order found and marked as complete:", order);
+      console.log("ordersData after marking as complete:", ordersData);
       saveOrdersToLocalStorage();
       // Re-render the row with the undo button
       row.innerHTML = `
@@ -251,6 +274,8 @@ orderTableBody.addEventListener("click", (event) => {
         <td>${order.dishes.join(", ")}</td>
       `;
       row = target.closest("tr"); // Re-fetch the row.
+    } else {
+      console.log("Order not found in ordersData:", orderNumber);
     }
   } else if (target.classList.contains("undo-button")) {
     row.classList.remove("completed-order");
@@ -295,3 +320,18 @@ btnAdd.addEventListener("click", () => {
 });
 
 loadOrdersFromLocalStorage();
+
+// Placeholder for isValidIP function (you might have this defined elsewhere)
+function isValidIP(ip) {
+  // Basic IP address validation regex
+  const ipRegex = /^(\d{1,3}\.){3}\d{1,3}$/;
+  if (!ipRegex.test(ip)) {
+    return false;
+  }
+  const parts = ip.split('.').map(Number);
+  return parts.every(part => part >= 0 && part <= 255);
+}
+
+// Assuming cartContent and buyNowButton are defined elsewhere in your code
+const cartContent = document.querySelector(".cart-content"); // Replace with your actual selector
+const buyNowButton = document.getElementById("buy-now-button"); // Replace with your actual ID
