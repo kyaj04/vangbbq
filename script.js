@@ -172,7 +172,7 @@ const btnAdd = document.getElementById("btn-add");
       localStorage.setItem("orders", JSON.stringify(ordersData));
       sendOrdersToLaptop();
     }
-
+/*
     function sendOrdersToLaptop() {
       const ipInput = document.getElementById("ipinput").value.trim();
       const feedbackDiv = document.getElementById("ip-feedback");
@@ -196,7 +196,30 @@ const btnAdd = document.getElementById("btn-add");
       .then(data => console.log("Response from server:", data))
       .catch(error => console.error("Error:", error));
     }
-    
+    */
+
+    //fuction to python 3000
+    function sendOrdersToLaptop() {
+      const ipInput = document.getElementById("ipinput").value.trim();
+      const feedbackDiv = document.getElementById("ip-feedback");
+  
+      if (ipInput === "" || ipInput === "192.168.x.x" || !isValidIP(ipInput)) {
+          feedbackDiv.textContent = "Invalid IP address. Please enter a valid one.";
+          feedbackDiv.style.display = "block";
+          return;
+      } else {
+          feedbackDiv.style.display = "none";
+      }
+  
+      const jsonData = JSON.stringify(ordersData);
+      const url = `http://<span class="math-inline">\{ipInput\}\:3000/?data\=</span>{encodeURIComponent(jsonData)}`;
+  
+      fetch(url)
+          .then(response => response.text())
+          .then(data => console.log("Response from server:", data))
+          .catch(error => console.error("Error:", error));
+  }
+  
     // Function to check if the IP address format is valid
 function isValidIP(ip) {
   const regex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
