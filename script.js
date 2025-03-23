@@ -212,14 +212,14 @@ const btnAdd = document.getElementById("btn-add");
       }
   
       const jsonData = JSON.stringify(ordersData);
-      const url = `http://<span class="math-inline">\{ipInput\}\:3000/?data\=</span>{encodeURIComponent(jsonData)}`;
+      const url = `http://${ipInput}:3000/?data=${encodeURIComponent(jsonData)}`; // Corrected line
   
       fetch(url)
           .then(response => response.text())
           .then(data => console.log("Response from server:", data))
           .catch(error => console.error("Error:", error));
   }
-  
+
     // Function to check if the IP address format is valid
 function isValidIP(ip) {
   const regex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
