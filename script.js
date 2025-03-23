@@ -241,6 +241,7 @@ orderTableBody.addEventListener("click", (event) => {
     if (order) {
       order.completed = true;
       saveOrdersToLocalStorage();
+      // Re-render the row with the undo button
       row.innerHTML = `
         <td>
           ${orderNumber}
@@ -256,6 +257,7 @@ orderTableBody.addEventListener("click", (event) => {
     if (order) {
       order.completed = false;
       saveOrdersToLocalStorage();
+      // Re-render the row without the undo button
       row.innerHTML = `
         <td>
           ${orderNumber}
