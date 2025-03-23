@@ -328,18 +328,3 @@ btnAdd.addEventListener("click", () => {
 });
 
 loadOrdersFromLocalStorage();
-
-// Placeholder for isValidIP function (you might have this defined elsewhere)
-function isValidIP(ip) {
-  // Basic IP address validation regex
-  const ipRegex = /^(\d{1,3}\.){3}\d{1,3}$/;
-  if (!ipRegex.test(ip)) {
-    return false;
-  }
-  const parts = ip.split('.').map(Number);
-  return parts.every(part => part >= 0 && part <= 255);
-}
-
-// Assuming cartContent and buyNowButton are defined elsewhere in your code
-const cartContent = document.querySelector(".cart-content"); // Replace with your actual selector
-const buyNowButton = document.getElementById("buy-now-button"); // Replace with your actual ID
