@@ -169,7 +169,34 @@ const btnAdd = document.getElementById("btn-add");
 
     function saveOrdersToLocalStorage() {
       localStorage.setItem("orders", JSON.stringify(ordersData));
+      sendOrdersToLaptop();
     }
+
+    function sendOrdersToLaptop() {
+      const ipInput = document.getElementById("ipinput").value.trim();
+    
+      // Check if the input is empty or the default value
+      if (ipInput === "" || ipInput === "192.168.x.x" || !isValidIP(ipInput)) {
+        console.warn("Invalid or missing IP address. Function will not run.");
+        return; // Don't run the function if the IP is invalid or empty
+      }
+    
+      fetch(`http://${ipInput}:3000/receive`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(ordersData)
+      })
+      .then(response => response.text())
+      .then(data => console.log("Response from server:", data))
+      .catch(error => console.error("Error:", error));
+    }
+    
+    // Function to check if the IP address format is valid
+    function isValidIP(ip) {
+      const regex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+      return regex.test(ip);
+    }
+    
 
     function loadOrdersFromLocalStorage() {
       ordersData.forEach(order => {
