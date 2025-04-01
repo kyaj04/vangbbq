@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Orders List</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #ffffff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+
+
+    h1 {
+      text-align: center;
+    }
+
+    .container {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .box {
+      background-color: #1e1e1e;
+      padding: 20px;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    #pending-orders {
+      flex: 1;
+    }
+
+    #completed-orders {
+      flex: 0.3;
+      font-size: 1.5em;
+    }
+
+    h2 {
+      color: #90caf9;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      border: 1px solid #444;
+      padding: 12px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #333;
+    }
+
+    tbody tr:nth-child(odd) {
+      background-color: #2a2a2a;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: #1e1e1e;
+    }
+
+    #completed-table th:nth-child(2),
+    #completed-table td:nth-child(2),
+    #completed-table th:nth-child(3),
+    #completed-table td:nth-child(3) {
+      display: none;
+    }
+
+    #completed-table td:first-child {
+      font-weight: bold;
+    }
+
+    @media (max-width: 800px) {
+      .container {
+        flex-direction: column;
+      }
+
+      #completed-orders {
+        font-size: 1.2em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Order List</h1>
+  <div class="container">
+    <div class="box" id="pending-orders">
+      <h2>Pending Orders</h2>
+      <table id="pending-table">
+        <thead>
+          <tr>
+            <th>Order Number</th>
+            <th>Order Items</th>
+            <th>Time</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="box" id="completed-orders">
+      <h2>Completed Orders</h2>
+      <table id="completed-table">
+        <thead>
+          <tr>
+            <th>Order Number</th>
+            <th>Order Items</th>
+            <th>Time</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+
+function setupEventSource() {
+  const eventSource = new EventSource('/events/orders');
+  
+  eventSource.onmessage = (event) => {
+    const orders = JSON.parse(event.data);
+    console.log('Orders updated:', orders);
+    populateTables(orders);
+  };
+
+  eventSource.onerror = (error) => {
+    console.error('EventSource error:', error);
+    eventSource.close();
+  };
+
+  console.log("Connected to server for real-time updates.");
+}
+
+function populateTables(orders) {
+  const pendingTableBody = document.querySelector('#pending-table tbody');
+  const completedTableBody = document.querySelector('#completed-table tbody');
+
+  // Clear existing rows before populating new data
+  pendingTableBody.innerHTML = '';
+  completedTableBody.innerHTML = '';
+
+  // Sort pending orders by oldest time and completed by ascending order number
+  const pendingOrders = orders.filter(order => order.status === 'pending').sort((a, b) => new Date(a.time) - new Date(b.time));
+  const completedOrders = orders.filter(order => order.status === 'completed').sort((a, b) => b.orderNumber - a.orderNumber); 
+
+  // Create table rows
+  const createRow = (order, isCompleted = false) => {
+    const row = document.createElement('tr');
+    row.innerHTML = isCompleted ? `
+      <td><strong>${order.orderNumber}</strong></td>
+      <td style="display:none;">${order.orderItems.map(item => `${item.quantity} ${item.items}`).join(', ')}</td>
+      <td style="display:none;">${order.time}</td>
+      <td>${order.status}</td>
+    ` : `
+      <td>${order.orderNumber}</td>
+      <td>${order.orderItems.map(item => `${item.quantity} ${item.items}`).join(', ')}</td>
+      <td>${order.time}</td>
+      <td>${order.status}</td>
+    `;
+    return row;
+  };
+
+  // Append rows
+  pendingOrders.forEach(order => pendingTableBody.appendChild(createRow(order)));
+  completedOrders.forEach(order => completedTableBody.appendChild(createRow(order, true)));
+}
+
+// Initialize SSE
+setupEventSource();
+  </script>
+</body>
+</html>

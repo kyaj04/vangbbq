@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Menu</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+  height: 100%; /* Important! */
+  width: 100;
+  margin: 0; /* Reset default margins */
+  padding: 0;
+  overflow: hidden; /* Optional: Prevent horizontal scroll */
+}
+
+    body {
+      background-image: url("img/smokeym.jpg");
+      background-repeat: no-repeat;
+      background-size: cover;
+      
+    }
+
+    .parent-container {
+      position: relative;
+
+      top: 15%;
+    }
+    
+    .container {
+      position: relative;
+      top: 0%;
+      left: 1%;
+      transform: translate(0%, 0%);
+      width: 30vw;
+      height: 45vw;
+      background: #000000;
+      box-shadow: 0 15px 30px #ffffff;
+      border-radius: 1vw;
+      /* Use viewport width */
+      text-shadow:
+        -.5px -.5px 0 #343333,
+        /* Top left */
+        .5px -.5px 0 #343333,
+        /* Top right */
+        -.5px .5px 0 #343333,
+        /* Bottom left */
+        .5px .5px 0 #343333;
+      /* Bottom right */
+
+    }
+
+    .container .slide .item {
+      width: 10vw;
+      height: 12vw;
+      position: absolute;
+      top: 75%;
+      transform: translate(100%, 0%);
+      border-radius: 20px;
+      box-shadow: 0 5px 7px #454444;
+      background-position: 45% 50%;
+      background-size: 125%;
+      background-repeat: no-repeat;
+      background-color: #000000;
+      display: inline-block;
+      transition: 0.5s;
+    }
+
+    .slide .item:nth-child(1),
+    .slide .item:nth-child(2) {
+      top: 0;
+      left: 0;
+      transform: translate(0, 0);
+      border-radius: 25px;
+      width: 100%;
+      height: 100%;
+    }
+
+
+    .slide .item:nth-child(3) {
+      left: 50%;
+      opacity: 1;
+    }
+
+    .slide .item:nth-child(4) {
+      left: calc(50% + 120px);
+      opacity: 1;
+    }
+
+    .slide .item:nth-child(5) {
+      left: calc(50% + 240px);
+      opacity: 1;
+    }
+
+    .slide .item:nth-child(6) {
+      left: calc(50% + 360px);
+      opacity: 1;
+    }
+
+    .slide .item:nth-child(7) {
+      left: calc(50% + 478px);
+      opacity: 1;
+    }
+
+    .slide .item:nth-child(8) {
+      left: calc(50% + 600px);
+      opacity: 1;
+    }
+
+    /* here n = 0, 1, 2, 3,... */
+    .slide .item:nth-child(n + 9) {
+      left: calc(50% + 660px);
+      opacity: 0;
+    }
+
+
+
+    .item .content {
+      position: relative;
+      top: 50%;
+      left: 50%;
+      width: auto;
+      text-align: left;
+      color: #eee;
+      transform: translate(-50%, -50%);
+      font-family: system-ui, Arial, sans-serif;
+      display: flex;
+      background-color: rgb(255, 153, 0, .1);
+      padding: .5vw;
+      /* Use viewport width */
+    }
+
+    .content .name-small {
+      position: absolute;
+      font-size: 8px;
+      top: -55%;
+      left: 0%;
+      /* Or adjust as needed */
+
+      /* Or adjust as needed */
+      text-align: center;
+      /* Or adjust as needed */
+      /* Add other styles as needed */
+      color: #ffffff;
+      
+
+    }
+
+    /* Adjust styles for specific small items (if needed) */
+    .slide .item:nth-child(1) .content .name-small,
+    .slide .item:nth-child(3) .content .name-small,
+    .slide .item:nth-child(4) .content .name-small,
+    .slide .item:nth-child(5) .content .name-small,
+    .slide .item:nth-child(6) .content .name-small,
+    .slide .item:nth-child(7) .content .name-small,
+    .slide .item:nth-child(8) .content .name-small {
+
+      /* adjust font size */
+      display: block;
+    }
+
+    .item .content .price-small,
+    .name-small {
+      display: none;
+      /* Initially hide the small price */
+    }
+
+    /* Show small price, hide other text when image is small */
+    .slide .item:nth-child(1) .content .price-small,
+    .slide .item:nth-child(3) .content .price-small,
+    .slide .item:nth-child(4) .content .price-small,
+    .slide .item:nth-child(5) .content .price-small,
+    .slide .item:nth-child(6) .content .price-small,
+    .slide .item:nth-child(7) .content .price-small,
+    .slide .item:nth-child(8) .content .price-small {
+      display: block;
+    }
+
+    .slide .item:nth-child(1) .content .name,
+    .slide .item:nth-child(1) .content .des,
+    .slide .item:nth-child(1) .content .price,
+    .slide .item:nth-child(3) .content .name,
+    .slide .item:nth-child(3) .content .des,
+    .slide .item:nth-child(3) .content .price,
+    .slide .item:nth-child(4) .content .name,
+    .slide .item:nth-child(4) .content .des,
+    .slide .item:nth-child(4) .content .price,
+    .slide .item:nth-child(5) .content .name,
+    .slide .item:nth-child(5) .content .des,
+    .slide .item:nth-child(5) .content .price,
+    .slide .item:nth-child(6) .content .name,
+    .slide .item:nth-child(6) .content .des,
+    .slide .item:nth-child(6) .content .price,
+    .slide .item:nth-child(7) .content .name,
+    .slide .item:nth-child(7) .content .des,
+    .slide .item:nth-child(7) .content .price,
+    .slide .item:nth-child(8) .content .name,
+    .slide .item:nth-child(8) .content .des,
+    .slide .item:nth-child(8) .content .price {
+      display: none;
+    }
+
+
+    .slide .item:nth-child(2) .content {
+      display: block;
+    }
+
+
+    .content .name {
+      width: 300px;
+      font-size: 20px;
+      text-transform: uppercase;
+      font-weight: bold;
+      opacity: 0;
+      animation: animate .6s ease-in-out 1 forwards;
+    }
+
+    .content .des {
+      font-size: 10px;
+      margin-top: 10px;
+      margin-bottom: 20px;
+      opacity: 0;
+      color: #ffffff;
+      animation: animate 1s ease-in-out 0.3s 1 forwards;
+    }
+
+    .content .price,
+    .price-small {
+      font-size: 40px;
+      text-transform: uppercase;
+      font-weight: bold;
+      opacity: 0;
+      animation: animate 1s ease-in-out 1 forwards;
+
+    }
+
+
+
+    @keyframes animate {
+      from {
+        opacity: 0;
+        transform: translate(0, 100px);
+        filter: blur(33px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translate(0);
+        filter: blur(0);
+      }
+    }
+
+    .logo {
+      width: 25vw;
+      height: 0%;
+      left: 2%;
+      position: relative;
+      z-index: 10;
+      box-shadow: 0 1vw 3vw #3e3a35;
+      right: -9%;
+      margin-top: 2%;
+      background-color: #ffffff;
+      opacity: .70;
+      border-radius: 25px;
+    }
+
+    .logo img {
+  
+      width: 105%;
+      height: auto;
+      display: block;
+      border-radius: 25px;
+
+
+    }
+
+    /*table css*/
+
+    .box {
+
+
+      border-radius: 12px;
+
+      overflow: hidden;
+    }
+
+    #completed-orders {
+      flex: 0.3;
+      font-size: .9em;
+    }
+
+    h2 {
+      font-size: 20px;
+      color: #ffffff;
+      text-align: center;
+      margin-bottom: 10px;
+      border-radius: 20px;
+      border-style: solid;
+      padding: 5px;
+    }
+
+    /* Table container for scrolling */
+    .table-container {
+      position: absolute;
+      height: 400px;
+      /* Adjust this value */
+      width: auto;
+      right: 0%;
+      top: 0%;
+      overflow: hidden;
+      font-family: system-ui, Arial, sans-serif;
+    }
+
+    table {
+      width: 100%;
+      border-style: none;
+      border-collapse: collapse;
+      color: #eee;
+
+    }
+
+    th,
+    td {
+      padding: 5px;
+      text-align: left;
+
+    }
+
+    th {
+      background-color: rgba(49, 48, 48, 0.5);
+
+    }
+
+    tbody tr:nth-child(odd) {
+      background-color: rgba(82, 82, 82, 0.5);
+
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: rgba(0, 0, 0, 0.5);
+
+    }
+
+    #completed-table th:nth-child(2),
+    #completed-table td:nth-child(2),
+    #completed-table th:nth-child(3),
+    #completed-table td:nth-child(3) {
+      display: block;
+    }
+
+    #completed-table td:first-child {
+      font-weight: bolder;
+    }
+
+    .headline-container{
+      position: absolute;
+      height: 410px;
+      /* Adjust this value */
+      width: 410px;
+      right: 23%;
+      top: 0%;
+      overflow: hidden;
+      font-family: system-ui, Arial, sans-serif;
+
+
+    }
+
+    .headline{
+    font-size: 40px;
+    color: #eee;
+    text-align: center;
+    font-family: system-ui, Arial, sans-serif;
+    border-radius: 25px;
+    background-color: rgb(0, 0, 0); /* 0.5 is 50% transparency */
+  }
+
+  .headline {
+    width: 385px;
+    height: 385px;
+    left: 3%;
+    position: relative;
+    overflow: hidden;
+
+  }
+
+  .headline-image {
+  position: absolute;
+  top: -5%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+  object-fit: cover; /* Or contain, fill, etc. */
+}
+
+  .headline-image.active {
+    opacity: 1;
+  }
+
+
+  </style>
+
+
+</head>
+
+
+<body>
+  <!--Font Awesome CDN-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!--Font Awesome CDN-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <div class="logo">
+    <img src="img/logo.jpg" alt="Logo">
+  </div>
+
+  <div class="headline-container">
+    <h2>Highlights</h2>
+    <div class="headline">
+
+    </div>
+
+  </div>
+
+  <div class="table-container">
+    <div class="box" id="completed-orders">
+      <h2>Completed Orders</h2>
+      <table id="completed-table">
+        <thead>
+          <tr>
+            <th>Order #</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+<div class="parent-container">
+  <div class="container">
+    <div class="slide">
+    </div>
+  </div>
+</div>
+
+
+  <script>
+    let next = document.querySelector('.next');
+    let prev = document.querySelector('.prev');
+
+    function slideNext() {
+      let items = document.querySelectorAll('.item');
+      document.querySelector('.slide').appendChild(items[0]);
+    }
+
+    function slidePrev() {
+      let items = document.querySelectorAll('.item');
+      document.querySelector('.slide').prepend(items[items.length - 1]);
+    }
+
+    // Automatically trigger 'next' every second
+    setInterval(slideNext, 10000); // 1000 milliseconds = 1 second
+
+    // JavaScript to load and display menu items
+    const sliders = document.getElementsByClassName('slide')[0];
+
+
+    let menuItems = [];
+
+
+
+
+    function displayMenuItems() {
+      sliders.innerHTML = ''; // Clear existing content
+
+      menuItems.forEach(item => {
+        const itemDiv = document.createElement('div');
+        itemDiv.classList.add('item');
+        itemDiv.style.backgroundImage = `url(${item.image})`;
+
+        const contentDiv = document.createElement('div');
+        contentDiv.classList.add('content');
+
+        const nameSmallDiv = document.createElement('div');
+        nameSmallDiv.classList.add('name-small');
+        nameSmallDiv.id = 'small-N';
+        nameSmallDiv.textContent = item.name;
+
+        const priceSmallDiv = document.createElement('div');
+        priceSmallDiv.classList.add('price-small');
+        priceSmallDiv.textContent = '$' + item.price;
+
+        const nameDiv = document.createElement('div');
+        nameDiv.classList.add('name');
+        nameDiv.textContent = item.name;
+
+        const desDiv = document.createElement('div');
+        desDiv.classList.add('des');
+        desDiv.textContent = item.des;
+
+        const priceDiv = document.createElement('div');
+        priceDiv.classList.add('price');
+        priceDiv.textContent = '$' + item.price;
+
+        contentDiv.appendChild(priceSmallDiv);
+        contentDiv.appendChild(nameSmallDiv);
+        contentDiv.appendChild(nameDiv);
+        contentDiv.appendChild(desDiv);
+        contentDiv.appendChild(priceDiv);
+
+        itemDiv.appendChild(contentDiv);
+        sliders.appendChild(itemDiv);
+      });
+    }
+
+    function fetchMenuItems() {
+      fetch('/menu')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          menuItems = data;
+          displayMenuItems();
+        })
+        .catch(error => {
+          console.error('Error fetching menu items:', error);
+          menuItems = defaultMenuItems; // Use default menu items
+          displayMenuItems();
+        });
+    } 
+
+// Set up EventSource connection
+const eventSource = new EventSource('/events/menu');
+eventSource.onopen = () => console.log('Connected to /events/menu');
+eventSource.onerror = (err) => console.error('SSE Error:', err);
+eventSource.onmessage = (event) => {
+  console.log('Data received:', JSON.parse(event.data));
+  const updatedMenuItems = JSON.parse(event.data);
+  menuItems = updatedMenuItems;
+  displayMenuItems();
+};
+
+
+    const defaultMenuItems = [{
+        "category": "Meats and Rice",
+        "name": "Pork Rice Combo",
+        "price": 15,
+        "image": "img/porkricem.jpg",
+        "des": " Farm-raised, selected flavorful lean cuts. Skin that shatters with crispness, united with tenderness beneath. A combination that redefines utterly craveable."
+      },
+      {
+        "category": "Meats and Rice",
+        "name": "Sausage Rice Combo",
+        "price": 15,
+        "image": "img/sausagericem.jpg",
+        "des": "A symphony of savory lean pork, infused with invigorating herbs, ginger's warmth, and traditional spices. Dominate your cravings with our signature dish."
+      },
+      {
+        "category": "Meats and Rice",
+        "name": "Chicken Rice Combo",
+        "price": 15,
+        "image": "img/chickenricem.jpg",
+        "des": "Bite into the rich, smoky flavors of our BBQ chicken thighs, where bold flavors meets tenderness in perfect harmony. This isn't just chicken; it's a sensory journey."
+      },
+      {
+        "category": "Meats and Rice",
+        "name": "Sweet Pork Rice Combo",
+        "price": 15,
+        "image": "img/sweetporkrice.jpg",
+        "des": "Using traditional Hmong ingredients, this dish is great for any gatherings. Pork cooked till mouth-watering tenderness, along with eggs. "
+      },
+      {
+        "category": "Appetizers",
+        "name": "Mango + Chili Ember Blend",
+        "price": 5,
+        "image": "img/mangom.jpg",
+        "des": "Experience the vibrant sweetness of mango, elevated by our in-house signature pepper blend. Where sweet and spicy meets a carefully crafted kick. It's a revelation that will awaken your taste buds."
+      },
+      {
+        "category": "Appetizers",
+        "name": "Pickle + Chili Ember Blend",
+        "price": 3,
+        "image": "img/pickelm.jpg",
+        "des": "Prepare for a jolt of flavor. Crisp pickles are infused with a bracing sourness, then ignited by our in-house signature pepper blend. This combination results in a uniquely addictive flavor profile."
+      },
+      {
+        "category": "Appetizers",
+        "name": "Tapioca Coconut Dessert",
+        "price": 5,
+        "image": "img/naamvaabm.jpg",
+        "des": "Our tapioca coconut dessert is pure comfort. Sweet, creamy coconut milk mingles with soft tapioca, evoking warm childhood memories. Simple yet very satisfying."
+      },
+      {
+        "category": "Appetizers",
+        "name": "Sticky Rice",
+        "price": 5,
+        "image": "img/stickyricem.jpg",
+        "des": "Our sticky rice blend is the ultimate culinary companion. Its subtly sweet, satisfyingly chewy texture. Scoop it alongside savory meats, soak up flavorful sauces, or enjoy it as a sweet side. It's the perfect foundation for any flavor adventure."
+      },
+      {
+        "category": "Beverages",
+        "name": "Drinks",
+        "price": 1,
+        "image": "img/beveragesm.jpg",
+        "des": "Don't forget the drinks. Enjoy cold refreshing beverages alongside your meal or snack."
+      },
+      {
+        "category": "Beverages",
+        "name": "Lime/Grenadine Drinks",
+        "price": 5,
+        "image": "img/rgdrinkm.jpg",
+        "des": "A simple mix drink that complements well with any snack time occasions."
+      }
+    ];
+
+    function setupEventSource() {
+      const eventSource = new EventSource('/events/orders');
+
+      eventSource.onmessage = (event) => {
+        const orders = JSON.parse(event.data);
+        console.log('Orders updated:', orders);
+        populateTables(orders);
+      };
+
+      eventSource.onerror = (error) => {
+        console.error('EventSource error:', error);
+        eventSource.close();
+      };
+
+      console.log("Connected to server for real-time updates.");
+    }
+
+    function populateTables(orders) {
+
+      const completedTableBody = document.querySelector('#completed-table tbody');
+
+      // Clear existing rows before populating new data
+
+      completedTableBody.innerHTML = '';
+
+      // Sort pending orders by oldest time and completed by ascending order number
+
+      const completedOrders = orders.filter(order => order.status === 'completed').sort((a, b) => b.orderNumber - a
+        .orderNumber);
+
+      // Create table rows
+      const createRow = (order, isCompleted = false) => {
+        const row = document.createElement('tr');
+        row.innerHTML = isCompleted ? `
+      <td><strong>${order.orderNumber}</strong></td>
+      <td style="display:none;">${order.orderItems.map(item => `${item.quantity} ${item.items}`).join(', ')}</td>
+      <td style="display:none;">${order.time}</td>
+      <td>${order.status}</td>
+    ` : `
+      <td>${order.orderNumber}</td>
+      <td>${order.orderItems.map(item => `${item.quantity} ${item.items}`).join(', ')}</td>
+      <td>${order.time}</td>
+      <td>${order.status}</td>
+    `;
+        return row;
+      };
+
+      // Append rows
+
+      completedOrders.forEach(order => completedTableBody.appendChild(createRow(order, true)));
+    }
+
+    let serverOnline = false;
+
+    function isServerUp() {
+      console.time(isServerUp)
+
+      fetch('/get_orders')
+        .then(response => {
+          if (response.ok) {
+            serverOnline = true;
+            setupEventSource();
+            //return response.json(); // Proceed with parsing JSON if server is up
+          } else {
+            serverOnline = false;
+            throw new Error('Network response was not ok');
+          }
+        })
+        .catch(error => {
+          serverOnline = false;
+          console.error('Error checking server status:', error);
+        });
+      console.timeEnd(isServerUp)
+    }
+
+
+    //headlight image slideshow
+    const headline = document.querySelector('.headline');
+  const imageFilenames = [
+    'img/sweetpork.jpg',
+  /*
+    'img/highlight/1.jpg',
+    'img/highlight/2.jpg',
+    'img/highlight/3.jpg',
+    'img/highlight/4.jpg',
+    'img/highlight/5.jpg',
+    'img/highlight/6.jpg',
+    'img/highlight/7.jpg',
+    'img/highlight/8.jpg',
+    'img/highlight/9.jpg',
+    'img/highlight/10.jpg',
+    'img/highlight/11.jpg',
+    'img/highlight/12.jpg',
+    'img/highlight/13.jpg',
+    'img/highlight/14.jpg',
+    'img/highlight/15.jpg',
+    'img/highlight/16.jpg',
+    'img/highlight/17.jpg',
+    'img/highlight/18.jpg',
+    'img/highlight/19.jpg',
+    'img/highlight/20.jpg',
+    'img/highlight/21.jpg',
+    'img/highlight/22.jpg',
+    'img/highlight/23.jpg',
+    'img/highlight/24.jpg',
+    'img/highlight/25.jpg',
+    'img/highlight/26.jpg',
+    'img/highlight/27.jpg',
+    'img/highlight/28.jpg',
+    'img/highlight/29.jpg',
+    'img/highlight/30.jpg',
+    'img/highlight/31.jpg',
+    'img/highlight/32.jpg',
+    'img/highlight/33.jpg',
+    'img/highlight/34.jpg',
+    'img/highlight/35.jpg',
+    'img/highlight/36.jpg',
+    'img/highlight/37.jpg',
+    'img/highlight/38.jpg',
+    'img/highlight/39.jpg',
+    'img/highlight/40.jpg',
+    'img/highlight/41.jpg',*/
+    // ... (Add all your filenames here) ...
+  ];
+  let currentIndex = 0;
+
+  // Function to create image elements
+  function createImages() {
+    imageFilenames.forEach((filename, index) => {
+      const img = document.createElement('img');
+      img.src = filename;
+      img.alt = `Image ${index + 1}`; // Simple alt text
+      img.classList.add('headline-image');
+      headline.appendChild(img);
+    });
+    // Select all images after they are created
+    images = document.querySelectorAll('.headline-image');
+    images[0].classList.add('active'); // Show the first image
+  }
+
+  // Function to show the next image
+  function showNextImage() {
+    images[currentIndex].classList.remove('active');
+    currentIndex = (currentIndex + 1) % images.length;
+    images[currentIndex].classList.add('active');
+  }
+
+  createImages(); // Create the image elements
+  setInterval(showNextImage, 3000); // Start the slideshow
+
+
+    // Initialize SSE
+    isServerUp()
+
+    // Initial load 
+    displayMenuItems();
+    fetchMenuItems();
+  </script>
+</body>
+
+</html>

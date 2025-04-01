@@ -1,0 +1,161 @@
+
+<head>
+    <title>Edit Menu</title>
+
+</head>
+<h1>Edit Menu Items</h1>
+
+<select id="itemCategory">
+    <option value="Meats" selected>Meats</option>
+    <option value="Meats and Rice">Meats and Rice</option>
+    <option value="Appetizers">Appetizers</option>
+    <option value="Beverages">Beverages</option>
+</select>
+<input type="text" id="itemName" placeholder="Item Name">
+<input type="text" id="itemPrice" placeholder="Price">
+<input type="text" id="itemImage" placeholder="Image URL">
+<input type="text" id="itemDescription" placeholder="Description">
+<button id="addItem">Add Item</button>
+
+<div id="menu-items">
+</div>
+
+<script>
+    // JavaScript for managing menu items
+    const itemCategoryInput = document.getElementById('itemCategory');
+    const itemNameInput = document.getElementById('itemName');
+    const itemPriceInput = document.getElementById('itemPrice');
+    const itemImageInput = document.getElementById('itemImage');
+    const itemDesInput = document.getElementById('itemDescription');
+    const addItemButton = document.getElementById('addItem');
+    const menuItemsDiv = document.getElementById('menu-items');
+    const categoryOrder = ["Meats", "Meats and Rice", "Appetizers", "Beverages"];
+
+    let menuItems = [];
+    let editingIndex = -1; // -1 means not editing
+
+    function renderMenuItems() {
+        menuItemsDiv.innerHTML = '';
+
+        // Sort the menuItems array
+        menuItems.sort((a, b) => {
+            const aIndex = categoryOrder.indexOf(a.category);
+            const bIndex = categoryOrder.indexOf(b.category);
+            return aIndex - bIndex;
+        });
+
+        menuItems.forEach((item, test) => {
+            const itemDiv = document.createElement('div');
+            itemDiv.classList.add('menu-item');
+            itemDiv.innerHTML = `
+                    <img src="${item.image}" width="50">
+                    <span>${item.name} - $${item.price}</span>
+                    <button onclick="editItem(${test})">Edit</button>
+                    <button onclick="deleteItem(${test})">Delete</button>
+                `;
+            menuItemsDiv.appendChild(itemDiv);
+        });
+    }
+
+    function fetchMenuItems() {
+        fetch('http://192.168.137.1:3000/menu')
+            .then(response => response.json())
+            .then(data => {
+                menuItems = data;
+                renderMenuItems();
+            });
+    }
+
+    function addItem() {
+        const category = itemCategoryInput.value;
+        const name = itemNameInput.value;
+        const price = parseFloat(itemPriceInput.value);
+        const image = itemImageInput.value;
+        const des = itemDesInput.value;
+
+        if (!name || isNaN(price) || !image) {
+            alert("Please fill out all fields correctly.");
+            return;
+        }
+
+        if (editingIndex !== undefined) {
+            // Save the edit by updating the existing item
+            menuItems[editingIndex] = {
+                category,
+                name,
+                price,
+                image,
+                des
+            };
+            editingIndex = undefined;
+            addItemButton.textContent = "Add Item";
+        } else {
+            // Add new item
+            menuItems.push({
+                category,
+                name,
+                price,
+                image,
+                des
+            });
+        }
+
+        fetch('/menu', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(menuItems)
+            })
+            .then(() => fetchMenuItems());
+
+        // Clear input fields
+        itemCategoryInput.value = 'Meats'; // Set category back to Meats
+        itemNameInput.value = '';
+        itemPriceInput.value = '';
+        itemImageInput.value = '';
+        itemDesInput.value = '';
+    }
+
+    function deleteItem(test) {
+        // Remove the item locally using its test
+        menuItems.splice(test, 1);
+
+        // Send the updated menuItems back to the server using POST
+        fetch('/menu', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(menuItems)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to update menu");
+                }
+                return response.json();
+            })
+            .then(() => fetchMenuItems()) // Refresh the updated menu
+            .catch(error => console.error('Error:', error));
+    }
+
+    function editItem(test) {
+        if (test < 0 || test >= menuItems.length) {
+            console.error("Invalid index for edit:", test);
+            return;
+        }
+
+        const item = menuItems[test];
+        itemCategoryInput.value = item.category || "";
+        itemNameInput.value = item.name || "";
+        itemPriceInput.value = item.price || "";
+        itemImageInput.value = item.image || "";
+        itemDesInput.value = item.des || "";
+        editingIndex = test;
+        addItemButton.textContent = "Save Edit";
+    }
+
+
+    addItemButton.addEventListener('click', addItem);
+    fetchMenuItems();
+</script>
